@@ -31,15 +31,19 @@ The project consists of two linked Docker containers communicating over a privat
    - **Obico:** Runs the [Obico Server](https://github.com/TheSpaghettiDetective/obico-server) offline ONNX model.
 2. **`antipasta-logic` (Controller):** The central orchestrator. It handles video hardware discovery, camera polling, exclusion masking, heuristic thresholding, and MQTT communication.
 
+Together, they use about 2GB of disk space with model weights, and under 1GB of RAM.
+
 ### Camera Connection
 
 By default, AntiPasta polls the printer camera to prevent monopolizing the limited network connection pool of many 3D printers and IP cameras. When polling, it establishes a brief connection, captures a single frame to disk, and immediately disconnects, ensuring you can still view the stream in your slicer or mobile app.
 
 You can optionally enable a persistent background connection. Persistent connection eliminates handshake latency and uses an in-memory buffer, providing much faster frame updates for dashboards and the AI engine, but permanently consumes one of your printer's limited video connection slots.
 
-To ensure system stability in either mode, AntiPasta enforces a strict 10MB memory safety limit per frame. If network packet loss or stream corruption causes a frame buffer to exceed this size, the system will safely drop the buffer and resynchronize to prevent memory exhaustion.
+AntiPasta supports TLS cert verification for camera streams, but it is disabled by default as many printers and IP cameras use self-signed certificates. If you want to use `STRICT_TLS` with a Bambu Lab printer, for example, you must also provide the Bambu Lab CA cert, which we will not provide.
 
-AntiPasta supports TLS cert verification for camera streams, but it is disabled by default as many printers and IP cameras use self-signed certificates. If you want to use `STRICT_TLS` with a Bambu Labs printer, for example, you must also provide the Bambu Labs CA cert, which we will not provide.
+All of the above is supported for both RTSP/RTSPS and the older "throw JPEGs down the pipe forever" protocol used by the Bambu Lab A1 and P1S.
+
+To ensure system stability in either mode, AntiPasta enforces a strict 10MB memory safety limit per frame. If network packet loss or stream corruption causes a frame buffer to exceed this size, the system will safely drop the buffer and resynchronize to prevent memory exhaustion.
 
 ### Heuristic Evaluation
 
