@@ -106,7 +106,7 @@ The `MQTT_PRINTER_STATUS_PRINTING` and `MQTT_PRINTER_STATUS_PAUSED` variables su
 
 ### Step 3: Build and Deployment
 
-Use the management script to build and start the containers. The multi-stage build will automatically install the correct drivers for your architecture.
+Use the management script to build and start the containers. The build process is multi-stage to make rebuilding faster for config changes.
 
 ```bash
 chmod +x manage.sh
