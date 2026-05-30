@@ -8,7 +8,11 @@ AntiPasta provides a self-hosted AI failure detection system for a single 3D pri
 
 The system is platform-aware and hardware-optimized. It utilizes hardware acceleration (Intel VAAPI or ARM V4L2 for video decoding; Intel OpenVINO or ARM NEON/XNNPACK for model inference) for extremely low resource usage. It supports standard RTSP/RTSPS streams and the proprietary Bambu Lab protocol used by the P1 and A1 series printers for camera access.
 
-**IMPORTANT:** This system **does not** control your printer. It provides MQTT Discovery-enabled entities with which you can determine how to handle failures using Home Assistant or any other means.
+**IMPORTANT:**
+
+1. This system **does not** control your printer. It provides MQTT messages (with discovery-enabled entities) with which _you_ can determine how to handle failures using Home Assistant or any other means.
+2. I only own a P1S, so that's the main target here.
+3. Believe the AI at your own risk.
 
 ## Table of Contents
 
@@ -26,7 +30,7 @@ The system is platform-aware and hardware-optimized. It utilizes hardware accele
 
 The project consists of two linked Docker containers communicating over a private bridge network.
 
-1. **`antipasta-ml` (Unified AI Backend):** A consolidated inference engine that adapts to your hardware at runtime. It supports two interchangeable architectures:
+1. **`antipasta-ml` (Unified AI Backend):** A consolidated inference engine that adapts to your hardware. It supports two interchangeable architectures:
    - **YOLOv11 (Recommended):** A high-accuracy, multi-class model ([`ApatheticWithoutTheA/3D-Print-Failure-Detector`](https://huggingface.co/ApatheticWithoutTheA/3D-Print-Failure-Detector)) that can detect multiple types of issues, including spaghetti, stringing, and zits.
    - **Obico:** Runs the [Obico Server](https://github.com/TheSpaghettiDetective/obico-server) offline ONNX model.
 2. **`antipasta-logic` (Controller):** The central orchestrator. It handles video hardware discovery, camera polling, exclusion masking, heuristic thresholding, and MQTT communication.
