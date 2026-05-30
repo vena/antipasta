@@ -1,0 +1,57 @@
+services:
+  antipasta-ml:
+    build:
+      context: ./ml
+      dockerfile: Dockerfile
+      # Multi-stage targets are removed in favor of a unified build
+    container_name: antipasta-ml
+    restart: unless-stopped
+    expose:
+      - "3333"
+    environment:
+      # Selection of yolov11 or obico is now handled at runtime by engine.py
+      - ML_ENGINE=${ML_ENGINE:-yolov11}
+      - ML_API_TOKEN=${ML_API_TOKEN:-internal_secret_token}
+      - TZ=${TZ:-UTC}
+      - PYTHONUNBUFFERED=1
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "992"
+    volumes:
+      - ./ml:/app
+      - "${MODEL_CACHE_DIR:-./tmp/model_cache}:/model_cache"
+    networks:
+      - antipasta-net
+
+  antipasta-logic:
+    build:
+      context: ./logic
+      dockerfile: Dockerfile
+      target: logic
+    container_name: antipasta-logic
+    restart: unless-stopped
+    depends_on:
+      - antipasta-ml
+    env_file: .env
+    ports:
+      - "${CONTROLLER_PORT:-8080}:8080"
+    environment:
+      - ML_API_TOKEN=${ML_API_TOKEN:-internal_secret_token}
+      - TZ=${TZ:-UTC}
+      - PYTHONUNBUFFERED=1
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "992"
+    volumes:
+      - ./logic:/app
+      - "${FAILURES_DIR:-./failures}:/failures"
+      # Provide the logic container with a custom CA certificate:
+      # - "./cert.pem:${CUSTOM_CA_CERT_PATH}"
+    networks:
+      - antipasta-net
+
+networks:
+  antipasta-net:
+    driver: bridge

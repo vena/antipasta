@@ -1,0 +1,1 @@
+# Marks adapters as a Python package

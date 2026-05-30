@@ -1,0 +1,27 @@
+# Use the official PyTorch CPU-only index to prevent NVIDIA/CUDA bloat.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+flask>=3.0.0
+waitress>=3.0.0
+requests>=2.31.0
+opencv-python-headless>=4.13.0
+numpy>=1.24.0
+
+# Unified ONNX Runtime with OpenVINO support for Intel iGPU acceleration.
+# (Used primarily by the Obico engine and for generic CPU fallbacks).
+onnxruntime-openvino>=1.18.0
+
+# Native OpenVINO toolkit for high-performance Intel GPU inference.
+# (Used by the YOLO engine to bypass ONNX Runtime dependency checks).
+openvino>=2024.0.0
+
+# Export tools required by Ultralytics to convert .pt to optimized formats.
+onnx>=1.16.0
+onnxslim>=0.1.31
+
+# Ultralytics for YOLOv11 logic.
+ultralytics>=8.3.0
+
+# Explicitly request CPU-only builds for the PyTorch export backend.
+torch>=2.0.0
+torchvision>=0.15.0
