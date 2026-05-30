@@ -50,7 +50,7 @@ Failure detection uses a dual-track **streak heuristic** to minimize false posit
 
 A single suspect frame will not trigger an alert; the system requires a configurable number of consecutive detections before issuing any of the above states.
 
-What constitutes a _Critical Failure_ is (configurable)(#setup-and-installation). Artifact detection is only available with the `yolov11` engine. The `obico` engine cannot distinguish between types and reports all issues as critical `failure`.
+What constitutes a _Critical Failure_ is [configurable](#setup-and-installation). Artifact detection is only available with the `yolov11` engine. The `obico` engine cannot distinguish between types and reports all issues as critical `failure`.
 
 ---
 
